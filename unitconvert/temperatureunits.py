@@ -37,9 +37,11 @@ class TemperatureUnit(object):
         function = getattr(self, function)
         return function()
 
-    def doconvert(self):
+    def doconvert(self, error_on_negative=True):
         """
         Return calculated conversion between two units
+
+        :param error_on_negative: bool, default True, If True raise an error when amount is negative.
 
         :returns: string containing original unit and value with converted
         unit and value

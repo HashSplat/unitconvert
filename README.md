@@ -38,6 +38,12 @@ To print help:
 
 The unit libraries may also be imported and used in Python scripts to perform conversions. Example:
 
+```python
+>>> import unitconvert
+>>> print(unitconvert.convert(500, "GB", "MB"))
+500000.0
+```
+
 ```
 # Filename: testconvert.py
 from unitconvert import digitalunits
@@ -98,6 +104,9 @@ Get in touch with me if you'd like to contribute.
 The code contained within this repository is released under the MIT license.
 
 ## Changelog
+
+### Version 1.0.4
+* 12/1/2017: Added convert method to make conversions easier.
 
 ### Version 1.0.3
 * 10/21/2017: Updated README with import instructions. Updated setup.py and runconvert.py with updated description.

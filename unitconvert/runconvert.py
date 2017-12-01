@@ -55,6 +55,40 @@ VOLUME_UNITS = ['ml', 'tsp', 'tbsp', 'cup', 'lcup', 'pt', 'qt', 'gal', 'l',
 MASS_UNITS = ['mg', 'g', 'oz', 'lb', 'kg']
 TEMP_UNITS = ['F', 'C', 'K']
 
+
+def convert(amount, ufrom, uto, error_on_negative=False):
+    """Convert the amount from 'unfrom' units to 'uto' units.
+
+    :param amount: float, amount to convert from
+    :param ufrom: string, unit to convert from
+    :param uto: string, unit to convert to
+    :param error_on_negative: bool, default True, If True raise an error when amount is negative.
+
+    :returns: the new amount in the 'uto' units given.
+    """
+    amount = float(amount)
+    if ufrom in DIGITAL_UNITS and uto in DIGITAL_UNITS:
+        return DigitalUnit(amount, ufrom, uto).doconvert(error_on_negative)
+
+    elif ufrom in LENGTH_UNITS and uto in LENGTH_UNITS:
+        return LengthUnit(amount, ufrom, uto).doconvert(error_on_negative)
+
+    elif ufrom in TIME_UNITS and uto in TIME_UNITS:
+        return TimeUnit(amount, ufrom, uto).doconvert(error_on_negative)
+
+    elif ufrom in VOLUME_UNITS and uto in VOLUME_UNITS:
+        return VolumeUnit(amount, ufrom, uto).doconvert(error_on_negative)
+
+    elif ufrom in MASS_UNITS and uto in MASS_UNITS:
+        return MassUnit(amount, ufrom, uto).doconvert(error_on_negative)
+
+    elif ufrom in TEMP_UNITS and uto in TEMP_UNITS:
+        return TemperatureUnit(amount, ufrom, uto).doconvert(error_on_negative)
+
+    else:
+        raise ValueError("Cannot find conversions for the given units (" + repr(ufrom) + ", " + repr(uto) + ")!")
+
+
 def do_argparser():
     """Parse and return command line arguments"""
     parser = argparse.ArgumentParser(
@@ -86,10 +120,12 @@ Temperature: F, C, K
                         required=False)
     return parser.parse_args()
 
+
 def format_output(org_amt, conv_amt, org_ufrom, conv_uto):
     """Return a string containing the original amount, original unit,
     converted amount, and unit converted to in a nice easy to read format."""
     return '{0} {1} is {2} {3}'.format(org_amt, org_ufrom, conv_amt, conv_uto)
+
 
 def main():
     """Main function"""
@@ -98,29 +134,9 @@ def main():
     uto = args.unit_to
     amt = args.amount
 
-    if ufrom in DIGITAL_UNITS and uto in DIGITAL_UNITS:
-        result = DigitalUnit(amt, ufrom, uto).doconvert()
-        print(format_output(amt, result, ufrom, uto))
+    result = convert(amt, ufrom, uto, error_on_negative=True)
+    print(format_output(amt, result, ufrom, uto))
 
-    if ufrom in LENGTH_UNITS and uto in LENGTH_UNITS:
-        result = LengthUnit(amt, ufrom, uto).doconvert()
-        print(format_output(amt, result, ufrom, uto))
-
-    if ufrom in TIME_UNITS and uto in TIME_UNITS:
-        result = TimeUnit(amt, ufrom, uto).doconvert()
-        print(format_output(amt, result, ufrom, uto))
-
-    if ufrom in VOLUME_UNITS and uto in VOLUME_UNITS:
-        result = VolumeUnit(amt, ufrom, uto).doconvert()
-        print(format_output(amt, result, ufrom, uto))
-
-    if ufrom in MASS_UNITS and uto in MASS_UNITS:
-        result = MassUnit(amt, ufrom, uto).doconvert()
-        print(format_output(amt, result, ufrom, uto))
-
-    if ufrom in TEMP_UNITS and uto in TEMP_UNITS:
-        result = TemperatureUnit(amt, ufrom, uto).doconvert()
-        print(format_output(amt, result, ufrom, uto))
 
 if __name__ == "__main__":
     main()

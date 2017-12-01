@@ -41,15 +41,17 @@ class VolumeUnit(object):
         function = getattr(self, function)
         return function()
 
-    def doconvert(self):
+    def doconvert(self, error_on_negative=True):
         """
         Return calculated conversion between two units
+
+        :param error_on_negative: bool, default True, If True raise an error when amount is negative.
 
         :returns: string containing original unit and value with converted
         unit and value
         :raises ValueError: if the amount (amt) is less than 0
         """
-        if self.amt < 0:
+        if error_on_negative and self.amt < 0:
             raise ValueError('Amount must be a positive number')
         conv = (self.amt * self._getuval(self.ufrom)) / self._getuval(self.uto)
         return conv
